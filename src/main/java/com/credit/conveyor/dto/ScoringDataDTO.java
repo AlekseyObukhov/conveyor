@@ -1,14 +1,21 @@
 package com.credit.conveyor.dto;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Past;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
+@Builder
 public class ScoringDataDTO {
     @NotNull
     @DecimalMin(value = "10000", message = "Amount cannot be less than 10000")
@@ -37,7 +44,7 @@ public class ScoringDataDTO {
 
     @NotNull
     @Past(message = "Date cannot be future")
-    @Schema(description = "Дата рождения", example = "1999-11-13")
+    @Schema(description = "Birthdate", example = "1999-11-13")
     private LocalDate birthdate;
 
     @NotNull

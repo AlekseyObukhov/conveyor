@@ -1,7 +1,18 @@
-package com.credit.conveyor.service;
+package com.credit.conveyor.service.imp;
 
-import com.credit.conveyor.dto.*;
+import com.credit.conveyor.dto.LoanApplicationRequestDTO;
+import com.credit.conveyor.dto.CreditDTO;
+import com.credit.conveyor.dto.ScoringDataDTO;
+import com.credit.conveyor.dto.EmploymentDTO;
+import com.credit.conveyor.dto.EmploymentStatus;
+import com.credit.conveyor.dto.LoanOfferDTO;
+import com.credit.conveyor.dto.PaymentScheduleElement;
+import com.credit.conveyor.dto.Position;
+import com.credit.conveyor.dto.Gender;
+import com.credit.conveyor.dto.MaritalStatus;
 import com.credit.conveyor.exception.ScoringException;
+
+import com.credit.conveyor.service.ConveyorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -14,7 +25,6 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -27,25 +37,27 @@ public class ConveyorServiceImpl implements ConveyorService {
     private static final String INSURANCE_MULTIPLIER = "0.03";
     private static final String INSURANCE_DISCOUNT = "2.00";
     private static final String SALARY_CLIENT_DISCOUNT = "1.00";
-
     private static final Integer NUMBER_OF_PERIODS_PER_YEAR = 12;
 
     @Override
     public List<LoanOfferDTO> getOffers(LoanApplicationRequestDTO requestDTO) {
-        log.info("============= Start of offers generation ============= ");
-        return Stream.of(generateLoanOffer(1L, false, false, requestDTO),
-                generateLoanOffer(2L, true, false, requestDTO),
-                generateLoanOffer(3L, false, true, requestDTO),
-                generateLoanOffer(4L, true, true, requestDTO))
+        log.info("Method getOffers starts with requestDTO = {}", requestDTO);
+        List<LoanOfferDTO> loanOfferDTOList = Stream.of(generateLoanOffer(1L, false, false, requestDTO),
+                        generateLoanOffer(2L, true, false, requestDTO),
+                        generateLoanOffer(3L, false, true, requestDTO),
+                        generateLoanOffer(4L, true, true, requestDTO))
                 .sorted(Comparator.comparing(LoanOfferDTO::getRate).reversed())
-                .collect(Collectors.toList());
+                .toList();
+        log.info("Method getOffers return loanOfferDTOList = {}", loanOfferDTOList );
+        return loanOfferDTOList;
     }
 
     private LoanOfferDTO generateLoanOffer(Long applicationId,
                                   Boolean isInsuranseEnabled,
                                   Boolean isSalaryClient,
                                   LoanApplicationRequestDTO requestDTO) {
-        log.info("========= Generate offer with id = {} =========", applicationId);
+        log.info("Method generateLoanOffer starts with applicationId = {}, isInsuranseEnabled = {}, " +
+                "isSalaryClient = {}, requestDTO = {}", applicationId, isInsuranseEnabled, isSalaryClient, requestDTO);
         BigDecimal rate = new BigDecimal(baseRate);
 
         BigDecimal totalAmount = calculateTotalAmount(requestDTO.getAmount(), isInsuranseEnabled);
@@ -54,7 +66,7 @@ public class ConveyorServiceImpl implements ConveyorService {
         BigDecimal finalRate = calculateRate(isInsuranseEnabled, isSalaryClient, rate);
         log.info("finalRate = {}", finalRate);
 
-        return LoanOfferDTO.builder()
+        LoanOfferDTO loanOfferDTO =  LoanOfferDTO.builder()
                 .applicationId(applicationId)
                 .requestedAmount(requestDTO.getAmount())
                 .totalAmount(totalAmount)
@@ -63,6 +75,8 @@ public class ConveyorServiceImpl implements ConveyorService {
                 .isInsuranceEnabled(isInsuranseEnabled)
                 .isSalaryClient(isSalaryClient)
                 .monthlyPayment(calculateMonthlyPayment(totalAmount, requestDTO.getTerm(), finalRate)).build();
+        log.info("Method generateLoanOffer return loanOfferDTO = {}", loanOfferDTO);
+        return loanOfferDTO;
     }
 
     private BigDecimal calculateTotalAmount(BigDecimal amount, Boolean isInsuranceEnabled) {
@@ -74,9 +88,11 @@ public class ConveyorServiceImpl implements ConveyorService {
 
     private BigDecimal calculateRate(Boolean isInsuranceEnabled, Boolean isSalaryClient, BigDecimal rate) {
         if (isInsuranceEnabled) {
+            log.info("rate decrease by {} because isInsuranseEnabled = {}", INSURANCE_DISCOUNT, isInsuranceEnabled);
             rate = rate.subtract(new BigDecimal(INSURANCE_DISCOUNT));
         }
         if (isSalaryClient) {
+            log.info("rate decrease by {} because isSalaryClient = {}", SALARY_CLIENT_DISCOUNT, isSalaryClient);
             rate = rate.subtract(new BigDecimal(SALARY_CLIENT_DISCOUNT));
         }
         return rate;
@@ -93,18 +109,14 @@ public class ConveyorServiceImpl implements ConveyorService {
      */
 
     private BigDecimal calculateMonthlyPayment(BigDecimal totalAmount, Integer term, BigDecimal rate) {
-        log.info("======== Start of monthly payment calculation ========");
+        log.info("Start calculateMonthlyPayment with totalAmount = {}, term = {}, rate = {}", totalAmount, term, rate);
         BigDecimal monthlyRatePercent = rate.divide(new BigDecimal(NUMBER_OF_PERIODS_PER_YEAR), 5, RoundingMode.HALF_EVEN);
-        log.info("monthlyRatePercent = {}", monthlyRatePercent);
 
         BigDecimal monthlyRate = monthlyRatePercent.divide(BigDecimal.valueOf(100), 6, RoundingMode.HALF_EVEN);
-        log.info("monthlyRate = {}", monthlyRate);
 
         BigDecimal coefficient = (monthlyRate.add(BigDecimal.ONE)).pow(term).setScale(6, RoundingMode.HALF_EVEN);
-        log.info("coefficient = {}", coefficient);
 
         BigDecimal annuityCoefficient = monthlyRate.multiply(coefficient).divide(coefficient.subtract(BigDecimal.ONE), RoundingMode.HALF_EVEN);
-        log.info("annuityCoefficient = {}", annuityCoefficient);
 
         BigDecimal monthlyPayment = totalAmount.multiply(annuityCoefficient).setScale(2, RoundingMode.HALF_EVEN);
         log.info("monthlyPayment = {}", monthlyPayment);
@@ -114,6 +126,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 
     @Override
     public CreditDTO calculateCredit(ScoringDataDTO scoringDataDTO) {
+        log.info("Method calculateCredit starts with scoringDataDTO = {}", scoringDataDTO);
         BigDecimal rate = scoring(scoringDataDTO);
 
         BigDecimal totalAmount = calculateTotalAmount(scoringDataDTO.getAmount(),
@@ -124,7 +137,6 @@ public class ConveyorServiceImpl implements ConveyorService {
         log.info("finalRate = {}", finalRate);
 
         Integer term = scoringDataDTO.getTerm();
-        log.info("term = {}", term);
 
         BigDecimal monthlyPayment = calculateMonthlyPayment(totalAmount,
                 term, finalRate);
@@ -134,7 +146,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 
         BigDecimal psk = calculatePSK(paymentScheduleElementList, totalAmount, term);
 
-        return CreditDTO.builder()
+        CreditDTO creditDTO = CreditDTO.builder()
                 .amount(totalAmount)
                 .monthlyPayment(monthlyPayment)
                 .psk(psk)
@@ -142,10 +154,13 @@ public class ConveyorServiceImpl implements ConveyorService {
                 .term(term)
                 .rate(finalRate).isInsurancyEnabled(scoringDataDTO.getIsInsuranceEnabled())
                 .isSalaryClient(scoringDataDTO.getIsSalaryClient()).build();
+        log.info("Method calculateCredit return creditDTO = {}", creditDTO);
+        return creditDTO;
     }
 
     private List<PaymentScheduleElement> calculateScheduleElement(BigDecimal totalAmount, Integer term,
                                                                   BigDecimal rate, BigDecimal monthlyPayment) {
+        log.info("Method calculateScheduleElement starts");
         List<PaymentScheduleElement> paymentScheduleElementList = new ArrayList<>();
 
         BigDecimal remainingDebt = totalAmount.setScale(2, RoundingMode.HALF_EVEN);
@@ -156,14 +171,18 @@ public class ConveyorServiceImpl implements ConveyorService {
             BigDecimal debtPayment = monthlyPayment.subtract(interestPayment);
             remainingDebt = remainingDebt.subtract(debtPayment);
 
-            paymentScheduleElementList.add(PaymentScheduleElement.builder()
+            PaymentScheduleElement paymentScheduleElement = PaymentScheduleElement.builder()
                             .number(i)
                             .date(paymentDate)
                             .totalPayment(monthlyPayment)
                             .remainingDebt(remainingDebt)
                             .interestPayment(interestPayment)
-                            .debtPayment(debtPayment).build());
+                            .debtPayment(debtPayment).build();
+            log.info("add to List paymentScheduleElement = {}", paymentScheduleElement);
+            paymentScheduleElementList.add(paymentScheduleElement);
+
         }
+        log.info("Method calculateScheduleElement return paymentScheduleElementList = {}", paymentScheduleElementList);
         return paymentScheduleElementList;
     }
 
@@ -284,6 +303,7 @@ public class ConveyorServiceImpl implements ConveyorService {
         if (!exceptionInfo.isEmpty()) {
             throw new ScoringException(exceptionInfo.toString());
         }
+        log.info("Scoring ends with rate = {}", rate);
         return rate;
     }
 
