@@ -22,19 +22,19 @@ import java.util.List;
 @RestController
 @RequestMapping("/conveyor")
 @RequiredArgsConstructor
-@Tag(name = "Кредитный калькулятор")
+@Tag(name = "Credit calculator")
 public class ConveyorController {
 
     private final ConveyorService conveyorService;
 
     @PostMapping("/offers")
-    @Operation(summary = "Генерация кредитных предложений")
+    @Operation(summary = "Generating loan offers")
     public ResponseEntity<List<LoanOfferDTO>> getOffers(@Valid @RequestBody LoanApplicationRequestDTO requestDTO) {
         return new ResponseEntity<>(conveyorService.getOffers(requestDTO), HttpStatus.OK);
     }
 
     @PostMapping("/calculation")
-    @Operation(summary = "Расчет кредита")
+    @Operation(summary = "Credit calculation")
     public ResponseEntity<CreditDTO> calculateCredit(@Valid @RequestBody ScoringDataDTO requestDTO) {
         return new ResponseEntity<>(conveyorService.calculateCredit(requestDTO), HttpStatus.OK);
     }

@@ -1,7 +1,8 @@
 package com.credit.conveyor;
 
 import com.credit.conveyor.dto.*;
-import com.credit.conveyor.service.ConveyorServiceImpl;
+import com.credit.conveyor.exception.ScoringException;
+import com.credit.conveyor.service.imp.ConveyorServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -56,6 +58,28 @@ class ConveyorServiceImplTests {
         CreditDTO CreditDTO = conveyorService.calculateCredit(scoringDataMock);
 
         assertEquals(expectedRate, CreditDTO.getRate().intValue());
+
+        EmploymentDTO employmentDTOTest2 = EmploymentDTO.builder().employmentStatus(EmploymentStatus.UNEMPLOYED)
+                .employerINN("inn")
+                .salary(BigDecimal.valueOf(85000))
+                .position(Position.WORKER)
+                .workExperienceTotal(5)
+                .workExperienceCurrent(1)
+                .build();
+
+        ScoringDataDTO scoringDataMock2 = mock(ScoringDataDTO.class);
+        when(scoringDataMock2.getAmount()).thenReturn(BigDecimal.valueOf(400000));
+        when(scoringDataMock2.getTerm()).thenReturn(18);
+        when(scoringDataMock2.getGender()).thenReturn(Gender.MALE);
+        when(scoringDataMock2.getBirthdate()).thenReturn(LocalDate.ofEpochDay(1995-11-12));
+        when(scoringDataMock2.getEmployment()).thenReturn(employmentDTOTest2);
+        when(scoringDataMock2.getIsInsuranceEnabled()).thenReturn(true);
+        when(scoringDataMock2.getIsSalaryClient()).thenReturn(true);
+        when(scoringDataMock2.getDependentAmount()).thenReturn(1);
+        when(scoringDataMock2.getMaritalStatus()).thenReturn(MaritalStatus.SINGLE);
+
+        assertThrows(ScoringException.class, () -> conveyorService.calculateCredit(scoringDataMock2));
+
     }
 
     @Test

@@ -1,14 +1,12 @@
 package com.credit.conveyor.dto;
 
-import lombok.*;
+import lombok.Data;
+import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Builder
 public class PaymentScheduleElement {
     private Integer number;

@@ -1,14 +1,13 @@
 package com.credit.conveyor.dto;
 
-import lombok.*;
+
+import lombok.Data;
+import lombok.Builder;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Builder
 public class CreditDTO {
     private BigDecimal amount;
