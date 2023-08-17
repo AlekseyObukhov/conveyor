@@ -50,4 +50,4 @@
 
 ## Документация API
 API задокументировано с помощью Swagger. <br>
-http://localhost:9090/swagger-ui/index.html - ссылка для доступа к swagger-ui в браузере
+http://localhost:8081/swagger-ui/index.html - ссылка для доступа к swagger-ui в браузере
