@@ -48,3 +48,6 @@
 **Response** - `void` <br>
 По API приходит объект `FinishRegistrationRequestDTO` и параметр applicationId (Long). Достаётся из БД заявка(Application) по applicationId. `ScoringDataDTO` насыщается информацией из `FinishRegistrationRequestDTO` и `Client,` который хранится в `Application.` Отправляется POST запрос к МС КК с телом `ScoringDataDTO.` 
 
+## Документация API
+API задокументировано с помощью Swagger. <br>
+http://localhost:9090/swagger-ui/index.html - ссылка для доступа к swagger-ui в браузере
