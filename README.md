@@ -42,10 +42,11 @@
 По API приходит `LoanOfferDTO.` Достаётся из БД заявка(Application) по applicationId из `LoanOfferDTO.` <br>
 В заявке обновляется статус, история статусов(List<ApplicationStatusHistoryDTO>), принятое предложение LoanOfferDTO устанавливается в поле appliedOffer. Заявка сохраняется. <br>
 
-**3. `PUT: /deal/offer`** - завершение регистрации + полный подсчёт кредита. <br>
+**3. `PUT: calculate/{applicationId}`** - завершение регистрации + полный подсчёт кредита. <br>
 
 **Request** - `FinishRegistrationRequestDTO,` param applicationId (Long) <br>
 **Response** - `void` <br>
+
 По API приходит объект `FinishRegistrationRequestDTO` и параметр applicationId (Long). Достаётся из БД заявка(Application) по applicationId. `ScoringDataDTO` насыщается информацией из `FinishRegistrationRequestDTO` и `Client,` который хранится в `Application.` Отправляется POST запрос к МС КК с телом `ScoringDataDTO.` 
 
 ## Документация API
