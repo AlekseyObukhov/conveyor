@@ -13,6 +13,7 @@ import com.credit.deal.feignclient.DealFeignClient;
 import com.credit.deal.model.Employment;
 import com.credit.deal.model.StatusHistory;
 import com.credit.deal.model.enums.ApplicationStatus;
+import com.credit.deal.model.enums.ChangeType;
 import com.credit.deal.model.enums.CreditStatus;
 import com.credit.deal.repository.ApplicationRepository;
 import com.credit.deal.repository.ClientRepository;
@@ -23,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
