@@ -31,7 +31,9 @@
   "passportNumber": "123456" <br>
 } <br>
 
-* **Response:** <br>
+Клиент и заявка сохраняются в БД:
+![image](https://github.com/AlekseyObukhov/conveyor/assets/133809437/0622153f-2381-42fd-8dd0-8fe59a90ffe3)
+![image](https://github.com/AlekseyObukhov/conveyor/assets/133809437/9b22a3ad-d341-427a-9222-98e87b450a17)
 
 **2. `PUT: /deal/offer`** - Выбор одного из предложений. 
 
@@ -54,6 +56,10 @@
 "isSalaryClient": true <br>
 } <br>
 
+Оффер добавляется в таблицу: <br>
+![image](https://github.com/AlekseyObukhov/conveyor/assets/133809437/2bb2228f-6666-488e-8fd3-d3a3fa3e4cec)
+Обновляется статус: <br>
+![image](https://github.com/AlekseyObukhov/conveyor/assets/133809437/fa19a680-3a43-45bf-acd6-474bad1e58bc)
 
 **3. `PUT: calculate/{applicationId}`** - завершение регистрации + полный подсчёт кредита. <br>
 
@@ -81,6 +87,12 @@
 "account": "3456897" <br>
 } <br>
 
+Данные кредита добавляются в БД:
+![image](https://github.com/AlekseyObukhov/conveyor/assets/133809437/cfa3f24c-9a75-4d74-99ea-d7505a102bbf)
+![image](https://github.com/AlekseyObukhov/conveyor/assets/133809437/9ac84312-b73d-4da2-81f5-b7b2a2047b11)
+
+Дополняется информация о клиенте:
+![image](https://github.com/AlekseyObukhov/conveyor/assets/133809437/54c60509-4fd4-4e23-ad59-14aeb07f4d88)
 
 
 ## Документация API
