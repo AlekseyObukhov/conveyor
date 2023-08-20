@@ -20,6 +20,7 @@ import org.modelmapper.ModelMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -136,7 +137,7 @@ public class DealServiceImplTest {
         Application application = Application.builder()
                 .id(1L)
                 .client(mock(Client.class))
-                .creationDate(LocalDate.now())
+                .creationDate(LocalDateTime.now())
                 .status(ApplicationStatus.APPROVED)
                 .statusHistory(new ArrayList<>())
                 .build();
@@ -222,7 +223,7 @@ public class DealServiceImplTest {
                 .id(1L)
                 .client(client)
                 .appliedOffer(loanOffer)
-                .creationDate(LocalDate.now())
+                .creationDate(LocalDateTime.now())
                 .status(ApplicationStatus.APPROVED)
                 .statusHistory(new ArrayList<>())
                 .build();
@@ -254,7 +255,7 @@ public class DealServiceImplTest {
                 .build();
 
         ScoringDataDTO scoringData = ScoringDataDTO.builder()
-                .amount(application.getAppliedOffer().getTotalAmount())
+                .amount(application.getAppliedOffer().getRequestedAmount())
                 .term(application.getAppliedOffer().getTerm())
                 .firstName(client.getFirstName())
                 .lastName(client.getLastName())
