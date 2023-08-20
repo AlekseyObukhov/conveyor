@@ -26,13 +26,12 @@
   "lastName": "Ivanov", <br>
   "middleName": "Petrovich", <br>
   "email": "ivanov@gmail.com", <br>
-  "birthdate": "1999-11-13", <br>
+  "birthdate": "1997-05-17", <br>
   "passportSeries": "1234", <br>
   "passportNumber": "123456" <br>
 } <br>
 
 * **Response:** <br>
-![image](https://github.com/AlekseyObukhov/conveyor/assets/133809437/823fbdfa-00b3-429e-aeb3-7a97f34d5752)
 
 **2. `PUT: /deal/offer`** - Выбор одного из предложений. 
 
@@ -42,12 +41,47 @@
 По API приходит `LoanOfferDTO.` Достаётся из БД заявка(Application) по applicationId из `LoanOfferDTO.` <br>
 В заявке обновляется статус, история статусов(List<ApplicationStatusHistoryDTO>), принятое предложение LoanOfferDTO устанавливается в поле appliedOffer. Заявка сохраняется. <br>
 
+**Example:** <br>
+* **Request:** <br>
+{ <br>
+"applicationId": 1, <br>
+"requestedAmount": 100000, <br>
+"totalAmount": 103000, <br>
+"term": 12, <br>
+"monthlyPayment": 8817.6, <br>
+"rate": 5, <br>
+"isInsuranceEnabled": true, <br>
+"isSalaryClient": true <br>
+} <br>
+
+
 **3. `PUT: calculate/{applicationId}`** - завершение регистрации + полный подсчёт кредита. <br>
 
 **Request** - `FinishRegistrationRequestDTO,` param applicationId (Long) <br>
 **Response** - `void` <br>
 
 По API приходит объект `FinishRegistrationRequestDTO` и параметр applicationId (Long). Достаётся из БД заявка(Application) по applicationId. `ScoringDataDTO` насыщается информацией из `FinishRegistrationRequestDTO` и `Client,` который хранится в `Application.` Отправляется POST запрос к МС КК с телом `ScoringDataDTO.` 
+
+**Example:** <br>
+* **Request:** <br>
+{ <br>
+"gender": "MALE", <br>
+"maritalStatus": "SINGLE", <br>
+"dependentAmount": 0, <br>
+"passportIssueDate": "2023-08-20", <br>
+"passportIssueBranch": "string", <br>
+"employment": { <br>
+"employmentStatus": "EMPLOYED", <br>
+"employerINN": "INN", <br>
+"salary": 85000, <br>
+"position": "WORKER", <br>
+"workExperienceTotal": 18, <br>
+"workExperienceCurrent": 6 <br>
+}, <br>
+"account": "3456897" <br>
+} <br>
+
+
 
 ## Документация API
 API задокументировано с помощью Swagger. <br>

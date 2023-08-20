@@ -27,20 +27,20 @@ public class DealController {
 
     private final DealService dealService;
 
-    @PostMapping("/deal/application")
+    @PostMapping("/application")
     @Operation(summary = "Get a list of loan offers")
     public ResponseEntity<List<LoanOfferDTO>> getOffers(@RequestBody LoanApplicationRequestDTO loanApplicationRequestDTO) {
         return new ResponseEntity<>(dealService.getOffers(loanApplicationRequestDTO), HttpStatus.OK);
     }
 
-    @PutMapping("/deal/offer")
+    @PutMapping("/offer")
     @Operation(summary = "Select and save an offer")
     public ResponseEntity<Void> applyOffer(@RequestBody LoanOfferDTO loanOfferDTO) {
         dealService.applyOffer(loanOfferDTO);
         return  ResponseEntity.ok().build();
     }
 
-    @PutMapping("/deal/calculate/{applicationId}")
+    @PutMapping("/calculate/{applicationId}")
     @Operation(summary = "Credit calculation")
     public ResponseEntity<Void> calculateCredit(@RequestBody FinishRegistrationRequestDTO finishRegistrationRequestDTO, @PathVariable Long applicationId) {
         dealService.calculateCredit(finishRegistrationRequestDTO, applicationId);

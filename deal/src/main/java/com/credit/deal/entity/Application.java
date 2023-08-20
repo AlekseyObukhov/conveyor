@@ -22,7 +22,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -52,14 +52,14 @@ public class Application {
     private ApplicationStatus status;
 
     @Column(name = "creation_date", nullable = false)
-    private LocalDate creationDate;
+    private LocalDateTime creationDate;
 
     @Column(name = "applied_offer", nullable = false)
     @Type(type = "jsonb")
     private LoanOfferDTO appliedOffer;
 
     @Column(name = "sign_date", nullable = false)
-    private LocalDate signDate;
+    private LocalDateTime signDate;
 
     @Column(name = "ses_code", nullable = false)
     private Integer sesCode;

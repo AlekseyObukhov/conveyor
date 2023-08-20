@@ -51,15 +51,19 @@ public class DealServiceImpl implements DealService {
         log.info("Save client in db {}", client);
 
         Application application = Application.builder()
-                .client(client).creationDate(LocalDate.now())
+                .client(client).creationDate(LocalDateTime.now())
                 .build();
-        updateApplicationStatus(application, ApplicationStatus.PREAPPROVAL);
+        updateApplicationStatus(application, ApplicationStatus.PREAPPROVAL, ChangeType.AUTOMATIC);
         log.debug("Create new application = {}", application);
 
         applicationRepository.save(application);
         log.info("save application in db {}", application);
 
         List<LoanOfferDTO> loanOfferDTO = dealFeignClient.generateOffers(loanApplicationRequestDTO);
+
+        for (LoanOfferDTO offer : loanOfferDTO) {
+            offer.setApplicationId(application.getId());
+        }
         log.info("Method getOffers return loanOfferDTO = {}", loanOfferDTO);
         return loanOfferDTO;
     }
@@ -77,7 +81,7 @@ public class DealServiceImpl implements DealService {
         }
         log.debug("Application byId = {}", application);
 
-        updateApplicationStatus(application, ApplicationStatus.APPROVED);
+        updateApplicationStatus(application, ApplicationStatus.APPROVED, ChangeType.AUTOMATIC);
 
         application.setAppliedOffer(loanOfferDTO);
 
@@ -123,7 +127,7 @@ public class DealServiceImpl implements DealService {
         application.setCredit(credit);
         log.debug("set credit in application {}", application);
 
-        updateApplicationStatus(application, ApplicationStatus.CC_APPROVED);
+        updateApplicationStatus(application, ApplicationStatus.CC_APPROVED, ChangeType.AUTOMATIC);
 
         applicationRepository.save(application);
         log.info("save application in database {}", application);
@@ -132,7 +136,7 @@ public class DealServiceImpl implements DealService {
 
     private ScoringDataDTO fillScoringData(FinishRegistrationRequestDTO finishRegistrationRequestDTO, Application application, Client client) {
         return ScoringDataDTO.builder()
-                .amount(application.getAppliedOffer().getTotalAmount())
+                .amount(application.getAppliedOffer().getRequestedAmount())
                 .term(application.getAppliedOffer().getTerm())
                 .firstName(client.getFirstName())
                 .lastName(client.getLastName())
@@ -152,12 +156,13 @@ public class DealServiceImpl implements DealService {
                 .build();
     }
 
-    private void updateApplicationStatus(Application application, ApplicationStatus newStatus) {
+    private void updateApplicationStatus(Application application, ApplicationStatus newStatus, ChangeType newChangeType) {
         application.setStatus(newStatus);
         log.info("application status change on {}", newStatus);
         StatusHistory statusHistory = StatusHistory.builder()
-                .date(LocalDate.now())
+                .date(LocalDateTime.now())
                 .status(newStatus)
+                .changeType(newChangeType)
                 .build();
         if (application.getStatusHistory() == null) {
             application.setStatusHistory(new ArrayList<>());

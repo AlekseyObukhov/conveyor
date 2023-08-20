@@ -17,7 +17,7 @@ public class StatusHistory {
 
     private ApplicationStatus status;
 
-    private LocalDate date;
+    private LocalDateTime date;
 
     private ChangeType changeType;
 }
