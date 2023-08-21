@@ -47,21 +47,21 @@ public class Application {
     @JoinColumn(name = "credit_id", referencedColumnName = "credit_id")
     private Credit credit;
 
-    @Column(name = "status", nullable = false)
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
 
-    @Column(name = "creation_date", nullable = false)
+    @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
-    @Column(name = "applied_offer", nullable = false)
+    @Column(name = "applied_offer")
     @Type(type = "jsonb")
     private LoanOfferDTO appliedOffer;
 
-    @Column(name = "sign_date", nullable = false)
+    @Column(name = "sign_date")
     private LocalDateTime signDate;
 
-    @Column(name = "ses_code", nullable = false)
+    @Column(name = "ses_code")
     private Integer sesCode;
 
     @Column(name = "status_history", columnDefinition = "jsonb")

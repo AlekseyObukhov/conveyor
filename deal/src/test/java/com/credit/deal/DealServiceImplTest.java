@@ -1,22 +1,36 @@
 package com.credit.deal;
 
+import com.credit.deal.dto.EmploymentDTO;
 import com.credit.deal.dto.LoanOfferDTO;
 import com.credit.deal.dto.LoanApplicationRequestDTO;
+import com.credit.deal.dto.FinishRegistrationRequestDTO;
+import com.credit.deal.dto.CreditDTO;
+import com.credit.deal.dto.ScoringDataDTO;
 import com.credit.deal.entity.Application;
 import com.credit.deal.entity.Client;
+import com.credit.deal.entity.Credit;
 import com.credit.deal.feignclient.DealFeignClient;
 import com.credit.deal.model.enums.ApplicationStatus;
+import com.credit.deal.model.enums.EmploymentStatus;
+import com.credit.deal.model.enums.MaritalStatus;
+import com.credit.deal.model.enums.Position;
+import com.credit.deal.model.enums.Gender;
+import com.credit.deal.model.enums.CreditStatus;
+import com.credit.deal.model.Passport;
+import com.credit.deal.model.Employment;
 import com.credit.deal.repository.ApplicationRepository;
 import com.credit.deal.repository.ClientRepository;
 import com.credit.deal.repository.CreditRepository;
 import com.credit.deal.service.imp.DealServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.http.ResponseEntity;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -114,7 +128,7 @@ public class DealServiceImplTest {
                 .sorted(Comparator.comparing(LoanOfferDTO::getRate).reversed())
                 .collect(Collectors.toList());
 
-        when(dealFeignClient.generateOffers(loanApplicationRequestDTO)).thenReturn(expectedLoanOffers);
+        when(dealFeignClient.generateOffers(loanApplicationRequestDTO)).thenReturn(ResponseEntity.ok(expectedLoanOffers));
 
         List<LoanOfferDTO> actualLoanOffers = dealService.getOffers(loanApplicationRequestDTO);
 
@@ -276,7 +290,7 @@ public class DealServiceImplTest {
 
         when(modelMapper.map(creditDTO, Credit.class)).thenReturn(credit);
         when(modelMapper.map(employmentDTO, Employment.class)).thenReturn(employment);
-        when(dealFeignClient.calculateCredit(scoringData)).thenReturn(creditDTO);
+        when(dealFeignClient.calculateCredit(scoringData)).thenReturn(ResponseEntity.ok(creditDTO));
         when(applicationRepository.findById(1L)).thenReturn(Optional.of(application));
 
         dealService.calculateCredit(finishRegistrationRequestDTO, applicationId);

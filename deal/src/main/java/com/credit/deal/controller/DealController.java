@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +30,7 @@ public class DealController {
 
     @PostMapping("/application")
     @Operation(summary = "Get a list of loan offers")
-    public ResponseEntity<List<LoanOfferDTO>> getOffers(@RequestBody LoanApplicationRequestDTO loanApplicationRequestDTO) {
+    public ResponseEntity<List<LoanOfferDTO>> getOffers(@Validated @RequestBody LoanApplicationRequestDTO loanApplicationRequestDTO) {
         return new ResponseEntity<>(dealService.getOffers(loanApplicationRequestDTO), HttpStatus.OK);
     }
 
@@ -37,13 +38,13 @@ public class DealController {
     @Operation(summary = "Select and save an offer")
     public ResponseEntity<Void> applyOffer(@RequestBody LoanOfferDTO loanOfferDTO) {
         dealService.applyOffer(loanOfferDTO);
-        return  ResponseEntity.ok().build();
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/calculate/{applicationId}")
     @Operation(summary = "Credit calculation")
     public ResponseEntity<Void> calculateCredit(@RequestBody FinishRegistrationRequestDTO finishRegistrationRequestDTO, @PathVariable Long applicationId) {
         dealService.calculateCredit(finishRegistrationRequestDTO, applicationId);
-        return  ResponseEntity.ok().build();
+        return ResponseEntity.ok().build();
     }
 }

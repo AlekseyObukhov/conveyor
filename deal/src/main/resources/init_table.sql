@@ -15,11 +15,11 @@ CREATE TABLE IF NOT EXISTS application (
 
 CREATE TABLE IF NOT EXISTS client (
                         client_id BIGSERIAL,
-                        last_name varchar,
-                        first_name varchar,
+                        last_name varchar NOT NULL,
+                        first_name varchar NOT NULL,
                         middle_name varchar,
-                        birth_date date,
-                        email varchar,
+                        birth_date date NOT NULL,
+                        email varchar NOT NULL,
                         gender varchar,
                         marital_status varchar,
                         dependent_amount integer,
@@ -29,18 +29,17 @@ CREATE TABLE IF NOT EXISTS client (
                         PRIMARY KEY (client_id)
 );
 
-
 CREATE TABLE IF NOT EXISTS credit (
-                        credit_id BIGSERIAL,
-                        amount decimal,
-                        term int,
-                        monthly_payment decimal,
-                        rate decimal,
-                        psk decimal,
-                        payment_schedule jsonb,
-                        insurance_enable boolean,
-                        salary_client boolean,
-                        credit_status varchar,
+                        credit_id BIGSERIAL NOT NULL,
+                        amount decimal NOT NULL,
+                        term int NOT NULL,
+                        monthly_payment decimal NOT NULL,
+                        rate decimal NOT NULL,
+                        psk decimal NOT NULL,
+                        payment_schedule jsonb NOT NULL,
+                        insurance_enable boolean NOT NULL,
+                        salary_client boolean NOT NULL,
+                        credit_status varchar NOT NULL,
                         PRIMARY KEY (credit_id)
 );
 

@@ -48,7 +48,7 @@ public class ConveyorServiceImpl implements ConveyorService {
                         generateLoanOffer(4L, true, true, requestDTO))
                 .sorted(Comparator.comparing(LoanOfferDTO::getRate).reversed())
                 .toList();
-        log.info("Method getOffers return loanOfferDTOList = {}", loanOfferDTOList );
+        log.info("Method getOffers return loanOfferDTOList = {}", loanOfferDTOList);
         return loanOfferDTOList;
     }
 
@@ -152,7 +152,7 @@ public class ConveyorServiceImpl implements ConveyorService {
                 .psk(psk)
                 .paymentSchedule(paymentScheduleElementList)
                 .term(term)
-                .rate(finalRate).isInsurancyEnabled(scoringDataDTO.getIsInsuranceEnabled())
+                .rate(finalRate).isInsuranceEnabled(scoringDataDTO.getIsInsuranceEnabled())
                 .isSalaryClient(scoringDataDTO.getIsSalaryClient()).build();
         log.info("Method calculateCredit return creditDTO = {}", creditDTO);
         return creditDTO;

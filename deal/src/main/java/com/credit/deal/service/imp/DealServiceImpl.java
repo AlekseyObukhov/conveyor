@@ -60,7 +60,7 @@ public class DealServiceImpl implements DealService {
         applicationRepository.save(application);
         log.info("save application in db {}", application);
 
-        List<LoanOfferDTO> loanOfferDTO = dealFeignClient.generateOffers(loanApplicationRequestDTO);
+        List<LoanOfferDTO> loanOfferDTO = dealFeignClient.generateOffers(loanApplicationRequestDTO).getBody();
 
         for (LoanOfferDTO offer : loanOfferDTO) {
             offer.setApplicationId(application.getId());
@@ -85,6 +85,7 @@ public class DealServiceImpl implements DealService {
         updateApplicationStatus(application, ApplicationStatus.APPROVED, ChangeType.AUTOMATIC);
 
         application.setAppliedOffer(loanOfferDTO);
+        application.setSignDate(LocalDateTime.now());
 
         applicationRepository.save(application);
         log.info("save application in db{}", application);
@@ -115,7 +116,7 @@ public class DealServiceImpl implements DealService {
 
         ScoringDataDTO scoringDataDTO = fillScoringData(finishRegistrationRequestDTO, application, client);
 
-        CreditDTO creditDTO = dealFeignClient.calculateCredit(scoringDataDTO);
+        CreditDTO creditDTO = dealFeignClient.calculateCredit(scoringDataDTO).getBody();
 
         Credit credit = modelMapper.map(creditDTO, Credit.class);
         log.debug("map credit from creditDTO {}", credit);
