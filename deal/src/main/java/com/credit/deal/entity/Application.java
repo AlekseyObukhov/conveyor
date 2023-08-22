@@ -54,7 +54,7 @@ public class Application {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
-    @Column(name = "applied_offer")
+    @Column(name = "applied_offer", columnDefinition = "jsonb")
     @Type(type = "jsonb")
     private LoanOfferDTO appliedOffer;
 

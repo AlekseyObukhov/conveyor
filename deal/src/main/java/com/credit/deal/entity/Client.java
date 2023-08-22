@@ -17,8 +17,6 @@ import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.OneToOne;
-import javax.persistence.JoinColumn;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
 import java.time.LocalDate;
@@ -35,10 +33,6 @@ public class Client {
     @Column(name = "client_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @OneToOne
-    @JoinColumn(name = "application_id", referencedColumnName = "application_id")
-    private Application application;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;

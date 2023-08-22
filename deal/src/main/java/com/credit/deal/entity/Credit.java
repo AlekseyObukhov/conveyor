@@ -16,8 +16,6 @@ import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.OneToOne;
-import javax.persistence.JoinColumn;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
 import java.math.BigDecimal;
@@ -36,10 +34,6 @@ public class Credit {
     @Column(name = "credit_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @OneToOne
-    @JoinColumn(name = "application_id", referencedColumnName = "application_id")
-    private Application application;
 
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;
