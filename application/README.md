@@ -34,6 +34,7 @@ Email адрес - строка, подходящая под паттерн [\w\
 } <br>
 
 * **Response:** <br>
+![image](https://github.com/AlekseyObukhov/conveyor/assets/133809437/51ab9d55-7e9c-48ab-87cf-46f24bcaa730)
 
 
 Клиент и заявка сохраняются в БД:
