@@ -9,13 +9,17 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Past;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Schema(name = "Request for a loan")
 public class LoanApplicationRequestDTO {

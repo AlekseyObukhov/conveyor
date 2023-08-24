@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="v1.0_create_application_table.xml" author="Aleksey">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="application"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="application">
+            <column name="application_id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="client_id" type="BIGINT">
+                <constraints foreignKeyName="fk_application_client"
+                             references="client(client_id)"
+                             nullable="false"/>
+            </column>
+            <column name="credit_id" type="BIGINT">
+                <constraints foreignKeyName="fk_application_credit"
+                             references="credit(credit_id)"/>
+            </column>
+            <column name="status" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creation_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+             </column>
+            <column name="applied_offer" type="JSONB"/>
+            <column name="sign_date" type="TIMESTAMP"/>
+            <column name="ses_code" type="INT"/>
+            <column name="status_history" type="JSONB"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

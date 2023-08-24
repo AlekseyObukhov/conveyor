@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     {
         IncorrectData data = new IncorrectData();
         data.setInfo(exception.getMessage());
-        log.info("data = {}", data);
+        log.info("data = {}", data.getInfo());
         return new ResponseEntity<>(data.getInfo(), HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
