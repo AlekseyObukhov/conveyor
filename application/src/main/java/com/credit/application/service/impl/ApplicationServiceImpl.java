@@ -20,6 +20,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ApplicationServiceImpl implements ApplicationService {
 
+    private static final String NAME_REGEX = "[a-zA-Z]{2,30}";
+    private static final String EMAIL_REGEX = "\\w{2,50}@[\\w.]{2,20}";
+    private static final String PASSPORT_NUMBER_REGEX = "\\d{6}";
+    private static final String PASSPORT_SERIES_REGEX = "\\d{4}";
+    private static final BigDecimal MIN_CREDIT_AMOUNT = BigDecimal.valueOf(10000);
+    private static final int MIN_CREDIT_TERM = 6;
+    private static final int MIN_CLIENT_AGE = 18;
+
     private final DealFeignClient dealFeignClient;
 
     @Override
@@ -43,35 +51,35 @@ public class ApplicationServiceImpl implements ApplicationService {
         log.info("Start prescoring for client {} {} {}", loanApplicationRequestDTO.getLastName(),
                 loanApplicationRequestDTO.getFirstName(), loanApplicationRequestDTO.getMiddleName());
 
-        if (!loanApplicationRequestDTO.getFirstName().matches("[a-zA-Z]{2,30}")) {
+        if (!loanApplicationRequestDTO.getFirstName().matches(NAME_REGEX)) {
             exceptionInfo.add("Incorrect first name");
         }
-        if (!loanApplicationRequestDTO.getLastName().matches("[a-zA-Z]{2,30}")) {
+        if (!loanApplicationRequestDTO.getLastName().matches(NAME_REGEX)) {
             exceptionInfo.add("Incorrect last name");
         }
-        if (loanApplicationRequestDTO.getMiddleName() != null && !loanApplicationRequestDTO.getMiddleName().matches("[a-zA-Z]{2,30}")) {
+        if (loanApplicationRequestDTO.getMiddleName() != null && !loanApplicationRequestDTO.getMiddleName().matches(NAME_REGEX)) {
             exceptionInfo.add("Incorrect middle name");
         }
-        if (!loanApplicationRequestDTO.getEmail().matches("\\w{2,50}@[\\w.]{2,20}")) {
+        if (!loanApplicationRequestDTO.getEmail().matches(EMAIL_REGEX)) {
             exceptionInfo.add("Client's email has incorrect format.");
         }
-        if (!loanApplicationRequestDTO.getPassportSeries().matches("\\d{4}")) {
+        if (!loanApplicationRequestDTO.getPassportSeries().matches(PASSPORT_SERIES_REGEX)) {
             exceptionInfo.add("Client's passport series has incorrect format.");
         }
-        if (!loanApplicationRequestDTO.getPassportNumber().matches("\\d{6}")) {
+        if (!loanApplicationRequestDTO.getPassportNumber().matches(PASSPORT_NUMBER_REGEX)) {
             exceptionInfo.add("passport number has incorrect format.");
         }
-        if (loanApplicationRequestDTO.getAmount().compareTo(BigDecimal.valueOf(10000)) < 0) {
+        if (loanApplicationRequestDTO.getAmount().compareTo(MIN_CREDIT_AMOUNT) < 0) {
             exceptionInfo.add("Credit amount less than 10000.");
         }
-        if (loanApplicationRequestDTO.getTerm() < 6) {
+        if (loanApplicationRequestDTO.getTerm() < MIN_CREDIT_TERM) {
             exceptionInfo.add("Credit term less than 6.");
         }
-        if (Period.between(loanApplicationRequestDTO.getBirthdate(), LocalDate.now()).getYears() < 18) {
+        if (Period.between(loanApplicationRequestDTO.getBirthdate(), LocalDate.now()).getYears() < MIN_CLIENT_AGE) {
             exceptionInfo.add("Client too young");
         }
         if (!exceptionInfo.isEmpty()) {
-            log.warn("Pre-scoring failed by {}", exceptionInfo);
+            log.error("Pre-scoring failed by {}", exceptionInfo);
             throw new PreScoringException(exceptionInfo.toString());
         }
         else {

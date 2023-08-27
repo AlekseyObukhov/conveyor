@@ -5,6 +5,8 @@ import com.credit.application.dto.LoanOfferDTO;
 import com.credit.application.exception.PreScoringException;
 import com.credit.application.feignclient.DealFeignClient;
 import com.credit.application.service.impl.ApplicationServiceImpl;
+import io.github.benas.randombeans.EnhancedRandomBuilder;
+import io.github.benas.randombeans.api.EnhancedRandom;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -100,17 +102,8 @@ public class ApplicationServiceImplTests {
 
         assertEquals(expectedLoanOffers, actualLoanOffers);
 
-        LoanApplicationRequestDTO loanApplicationRequestDTO2 = LoanApplicationRequestDTO.builder()
-                .amount(BigDecimal.valueOf(1000))
-                .firstName("Ivan123")
-                .middleName("Ivanovich")
-                .lastName("Ivanov")
-                .term(3)
-                .email("ivan@gmail.com")
-                .birthdate(LocalDate.of(2027, 5, 11))
-                .passportSeries("1234")
-                .passportNumber("123456")
-                .build();
+        EnhancedRandom random = EnhancedRandomBuilder.aNewEnhancedRandomBuilder().build();
+        LoanApplicationRequestDTO loanApplicationRequestDTO2 = random.nextObject(LoanApplicationRequestDTO.class);
 
         assertThrows(PreScoringException.class, () -> applicationService.getOffers(loanApplicationRequestDTO2));
     }
