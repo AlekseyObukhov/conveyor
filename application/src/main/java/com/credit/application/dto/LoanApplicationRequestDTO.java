@@ -6,7 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Past;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -54,12 +60,12 @@ public class LoanApplicationRequestDTO {
     private LocalDate birthdate;
 
     @NotNull
-    @Pattern(regexp = "[\\d]{4}", message = "Not valid passport series")
+    @Pattern(regexp = "\\d{4}", message = "Not valid passport series")
     @Schema(description = "Passport series", example = "1234")
     private String passportSeries;
 
     @NotNull
-    @Pattern(regexp = "[\\d]{6}", message = "Not valid passport number")
+    @Pattern(regexp = "\\d{6}", message = "Not valid passport number")
     @Schema(description = "Passport number", example = "123456")
     private String passportNumber;
 }
