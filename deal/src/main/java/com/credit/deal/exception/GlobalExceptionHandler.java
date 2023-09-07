@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     {
         IncorrectData data = new IncorrectData();
         data.setInfo(exception.getMessage());
-        log.info("Throw DealException: {}", data);
+        log.error("Throw DealException: {}", data);
         return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
     }
 
@@ -39,14 +39,25 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.toList());
 
         body.put("errors", errors);
-        log.info("Throw ValidationException: {}", body);
+        log.error("Throw ValidationException: {}", body);
         return new ResponseEntity<>(body , HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = FeignException.class)
-    public ResponseEntity<String> handleFeignClientException(FeignException exception)
+    public ResponseEntity<ErrorResponse> handleFeignClientException(FeignException exception)
     {
-        log.info("Throw DealException: {}", exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        int statusCode = exception.status();
+        String errorMessage = exception.getMessage();
+
+        ErrorResponse errorResponse = new ErrorResponse(statusCode, errorMessage);
+
+        if (statusCode == -1) {
+            errorMessage = "FeignClient request failed";
+            log.error("FeignException: {}", errorResponse);
+            return new ResponseEntity<>(new ErrorResponse(statusCode, errorMessage), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        log.error("FeignException: {}", errorResponse);
+        return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(statusCode));
     }
 }

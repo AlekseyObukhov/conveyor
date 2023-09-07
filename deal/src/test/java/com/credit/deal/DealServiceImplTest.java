@@ -21,6 +21,7 @@ import com.credit.deal.model.Employment;
 import com.credit.deal.repository.ApplicationRepository;
 import com.credit.deal.repository.ClientRepository;
 import com.credit.deal.repository.CreditRepository;
+import com.credit.deal.sender.SenderMessage;
 import com.credit.deal.service.impl.DealServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -61,6 +62,9 @@ public class DealServiceImplTest {
 
     @Mock
     private CreditRepository creditRepository;
+
+    @Mock
+    private SenderMessage senderMessage;
 
     @Spy
     private ModelMapper modelMapper;

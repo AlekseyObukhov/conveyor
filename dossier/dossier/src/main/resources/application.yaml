@@ -1,0 +1,24 @@
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:9092
+
+  mail:
+    host: smtp.yandex.com
+    port: 465
+    username: ${EMAIL_SENDER}
+    password: ${EMAIL_PASSWORD}
+    protocol: smtp
+    properties.mail.smtp:
+      auth: true
+      ssl.enable: true
+      starttls.enable: true
+
+email:
+  sender: ${EMAIL_SENDER}
+
+server:
+  port: 8083
