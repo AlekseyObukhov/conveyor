@@ -47,11 +47,11 @@ public class Application {
     @JoinColumn(name = "credit_id", referencedColumnName = "credit_id")
     private Credit credit;
 
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status;
 
-    @Column(name = "creation_date")
+    @Column(name = "creation_date", nullable = false)
     private LocalDateTime creationDate;
 
     @Column(name = "applied_offer", columnDefinition = "jsonb")

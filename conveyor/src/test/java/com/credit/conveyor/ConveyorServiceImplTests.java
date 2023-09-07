@@ -1,8 +1,12 @@
 package com.credit.conveyor;
 
 import com.credit.conveyor.dto.*;
+import com.credit.conveyor.dto.enums.EmploymentStatus;
+import com.credit.conveyor.dto.enums.Gender;
+import com.credit.conveyor.dto.enums.MaritalStatus;
+import com.credit.conveyor.dto.enums.Position;
 import com.credit.conveyor.exception.ScoringException;
-import com.credit.conveyor.service.imp.ConveyorServiceImpl;
+import com.credit.conveyor.service.impl.ConveyorServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

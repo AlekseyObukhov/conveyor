@@ -9,7 +9,7 @@ import com.credit.deal.dto.ScoringDataDTO;
 import com.credit.deal.entity.Application;
 import com.credit.deal.entity.Client;
 import com.credit.deal.entity.Credit;
-import com.credit.deal.feignclient.DealFeignClient;
+import com.credit.deal.feignclient.ConveyorFeignClient;
 import com.credit.deal.model.enums.ApplicationStatus;
 import com.credit.deal.model.enums.EmploymentStatus;
 import com.credit.deal.model.enums.MaritalStatus;
@@ -21,7 +21,7 @@ import com.credit.deal.model.Employment;
 import com.credit.deal.repository.ApplicationRepository;
 import com.credit.deal.repository.ClientRepository;
 import com.credit.deal.repository.CreditRepository;
-import com.credit.deal.service.imp.DealServiceImpl;
+import com.credit.deal.service.impl.DealServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +51,7 @@ import static org.mockito.Mockito.when;
 public class DealServiceImplTest {
 
     @Mock
-    private DealFeignClient dealFeignClient;
+    private ConveyorFeignClient conveyorFeignClient;
 
     @Mock
     private ApplicationRepository applicationRepository;
@@ -128,7 +128,7 @@ public class DealServiceImplTest {
                 .sorted(Comparator.comparing(LoanOfferDTO::getRate).reversed())
                 .collect(Collectors.toList());
 
-        when(dealFeignClient.generateOffers(loanApplicationRequestDTO)).thenReturn(ResponseEntity.ok(expectedLoanOffers));
+        when(conveyorFeignClient.generateOffers(loanApplicationRequestDTO)).thenReturn(ResponseEntity.ok(expectedLoanOffers));
 
         List<LoanOfferDTO> actualLoanOffers = dealService.getOffers(loanApplicationRequestDTO);
 
@@ -290,7 +290,7 @@ public class DealServiceImplTest {
 
         when(modelMapper.map(creditDTO, Credit.class)).thenReturn(credit);
         when(modelMapper.map(employmentDTO, Employment.class)).thenReturn(employment);
-        when(dealFeignClient.calculateCredit(scoringData)).thenReturn(ResponseEntity.ok(creditDTO));
+        when(conveyorFeignClient.calculateCredit(scoringData)).thenReturn(ResponseEntity.ok(creditDTO));
         when(applicationRepository.findById(1L)).thenReturn(Optional.of(application));
 
         dealService.calculateCredit(finishRegistrationRequestDTO, applicationId);

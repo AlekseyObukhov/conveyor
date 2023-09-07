@@ -1,5 +1,7 @@
 package com.credit.conveyor.dto;
 
+import com.credit.conveyor.dto.enums.EmploymentStatus;
+import com.credit.conveyor.dto.enums.Position;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.Builder;
