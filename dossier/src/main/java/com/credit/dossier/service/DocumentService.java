@@ -28,16 +28,12 @@ public class DocumentService {
 
     private File createCreditFile(Credit credit) {
         Map<String, String> data = new HashMap<>();
-        data.put("creditId ", credit.getId().toString());
-        data.put("creditAmount ", credit.getAmount().toString());
-        data.put("creditTerm ", credit.getTerm().toString());
-        data.put("monthlyPayment ", credit.getMonthlyPayment().toString());
-        data.put("rate ", credit.getRate().toString());
-        data.put("psk ", credit.getPsk().toString());
-        data.put("paymentSchedule ", credit.getPaymentSchedule().toString());
-        data.put("insuranceEnabled ", credit.getIsInsuranceEnabled().toString());
-        data.put("salaryClient ", credit.getIsSalaryClient().toString());
-        data.put("credit status ", credit.getCreditStatus().toString());
+        data.put("creditAmount", credit.getAmount().toString());
+        data.put("creditTerm", credit.getTerm().toString());
+        data.put("monthlyPayment", credit.getMonthlyPayment().toString());
+        data.put("rate", credit.getRate().toString());
+        data.put("psk", credit.getPsk().toString());
+        data.put("paymentSchedule", credit.getPaymentSchedule().toString());
 
         List<String> creditData = formatData(data);
 
@@ -46,12 +42,9 @@ public class DocumentService {
 
     private File createApplicationFile(Application application) {
         Map<String, String> data = new HashMap<>();
-        data.put("application Id ", application.getId().toString());
-        data.put("Client ", application.getClient().toString());
-        data.put("Status ", application.getStatus().toString());
-        data.put("creation date ", application.getCreationDate().toString());
-        data.put("apply offer ", application.getAppliedOffer().toString());
-        data.put("application history", application.getStatusHistory().toString());
+        data.put("Client", application.getClient().toString());
+        data.put("creation date", application.getCreationDate().toString());
+        data.put("apply offer", application.getAppliedOffer().toString());
 
         List<String> applicationData = formatData(data);
 

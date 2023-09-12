@@ -93,7 +93,7 @@ public class DealServiceImpl implements DealService {
         application.setAppliedOffer(loanOfferDTO);
 
         applicationRepository.save(application);
-        log.info("save application in db{}", application);
+        log.info("save application in db {}", application);
 
         EmailMessage message = EmailMessage.builder()
                 .address(application.getClient().getEmail())
@@ -131,7 +131,15 @@ public class DealServiceImpl implements DealService {
 
         ScoringDataDTO scoringDataDTO = fillScoringData(finishRegistrationRequestDTO, application, client);
 
-        CreditDTO creditDTO = conveyorFeignClient.calculateCredit(scoringDataDTO).getBody();
+        CreditDTO creditDTO;
+        try {
+            creditDTO = conveyorFeignClient.calculateCredit(scoringDataDTO).getBody();
+        }
+        catch (Exception exception) {
+            log.warn("Application denied by: {}", exception.getMessage());
+            denyApplication(application);
+            return;
+        }
 
         Credit credit = modelMapper.map(creditDTO, Credit.class);
         log.debug("map credit from creditDTO {}", credit);
@@ -172,6 +180,23 @@ public class DealServiceImpl implements DealService {
                 .isInsuranceEnabled(application.getAppliedOffer().getIsInsuranceEnabled())
                 .isSalaryClient(application.getAppliedOffer().getIsSalaryClient())
                 .build();
+    }
+
+    private void denyApplication(Application application) {
+
+        updateApplicationStatus(application, ApplicationStatus.CC_DENIED, ChangeType.AUTOMATIC);
+
+        applicationRepository.save(application);
+        log.info("save application in db {}", application);
+
+        EmailMessage message = EmailMessage.builder()
+                .address(application.getClient().getEmail())
+                .applicationId(application.getId())
+                .theme(Theme.APPLICATION_DENIED)
+                .build();
+
+        log.info("denyApplication - start sending message to dossier = {}", message);
+        senderMessage.sendMessage(message);
     }
 
     private void updateApplicationStatus(Application application, ApplicationStatus newStatus, ChangeType newChangeType) {

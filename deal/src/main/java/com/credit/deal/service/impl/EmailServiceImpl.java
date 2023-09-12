@@ -135,8 +135,6 @@ public class EmailServiceImpl implements EmailService {
         return application;
     }
 
-
-
     private void issueCredit(Application application) {
         if (application.getCredit() == null) {
             throw new DealException("credit  is not exists");

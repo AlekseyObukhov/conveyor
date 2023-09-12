@@ -101,11 +101,28 @@ public class KafkaService {
         EmailMessage emailMessage = getEmailMessage(data);
         Theme theme = emailMessage.getTheme();
         String address = emailMessage.getAddress();
+
+
         log.info("consumer received the message with topic = {}", theme);
 
         String text = "Loan successfully approved!";
 
         emailService.sendMessage(address, text, "Credit issued!");
+        log.info("Message for {} successfully delivered", address);
+    }
+
+    @KafkaListener(topics = "application-denied", groupId = "deal")
+    public void deniedMessage(String data) {
+        EmailMessage emailMessage = getEmailMessage(data);
+        Application application = dealFeignClient.getApplicationById(emailMessage.getApplicationId());
+        Theme theme = emailMessage.getTheme();
+        String address = emailMessage.getAddress();
+
+        log.info("consumer received the message with topic = {}", theme);
+
+        String messageText = String.format("Hello %s, your application denied.", application.getClient().getFirstName());
+
+        emailService.sendMessage(address, messageText, "Application denied");
         log.info("Message for {} successfully delivered", address);
     }
 
