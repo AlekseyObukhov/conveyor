@@ -5,6 +5,7 @@ import com.credit.deal.dto.LoanApplicationRequestDTO;
 import com.credit.deal.dto.LoanOfferDTO;
 import com.credit.deal.dto.ScoringDataDTO;
 import com.credit.deal.dto.CreditDTO;
+import com.credit.deal.dto.EmailMessage;
 import com.credit.deal.entity.Application;
 import com.credit.deal.entity.Client;
 import com.credit.deal.entity.Credit;
@@ -15,10 +16,13 @@ import com.credit.deal.model.StatusHistory;
 import com.credit.deal.model.enums.ApplicationStatus;
 import com.credit.deal.model.enums.ChangeType;
 import com.credit.deal.model.enums.CreditStatus;
+import com.credit.deal.model.enums.Theme;
 import com.credit.deal.repository.ApplicationRepository;
 import com.credit.deal.repository.ClientRepository;
 import com.credit.deal.repository.CreditRepository;
+import com.credit.deal.sender.SenderMessage;
 import com.credit.deal.service.DealService;
+import com.credit.deal.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -38,6 +42,8 @@ public class DealServiceImpl implements DealService {
     private final ApplicationRepository applicationRepository;
     private final ClientRepository clientRepository;
     private final CreditRepository creditRepository;
+    private final EmailService emailService;
+    private final SenderMessage senderMessage;
     private final ModelMapper modelMapper;
 
     @Override
@@ -85,10 +91,19 @@ public class DealServiceImpl implements DealService {
         updateApplicationStatus(application, ApplicationStatus.APPROVED, ChangeType.AUTOMATIC);
 
         application.setAppliedOffer(loanOfferDTO);
-        application.setSignDate(LocalDateTime.now());
 
         applicationRepository.save(application);
-        log.info("save application in db{}", application);
+        log.info("save application in db {}", application);
+
+        EmailMessage message = EmailMessage.builder()
+                .address(application.getClient().getEmail())
+                .applicationId(application.getId())
+                .theme(Theme.FINISH_REGISTRATION)
+                .build();
+
+        log.info("applyOffer - start sending message to dossier = {}", message);
+        senderMessage.sendMessage(message);
+
     }
 
     @Override
@@ -116,7 +131,15 @@ public class DealServiceImpl implements DealService {
 
         ScoringDataDTO scoringDataDTO = fillScoringData(finishRegistrationRequestDTO, application, client);
 
-        CreditDTO creditDTO = conveyorFeignClient.calculateCredit(scoringDataDTO).getBody();
+        CreditDTO creditDTO;
+        try {
+            creditDTO = conveyorFeignClient.calculateCredit(scoringDataDTO).getBody();
+        }
+        catch (Exception exception) {
+            log.warn("Application denied by: {}", exception.getMessage());
+            denyApplication(application);
+            return;
+        }
 
         Credit credit = modelMapper.map(creditDTO, Credit.class);
         log.debug("map credit from creditDTO {}", credit);
@@ -134,6 +157,7 @@ public class DealServiceImpl implements DealService {
         applicationRepository.save(application);
         log.info("save application in database {}", application);
 
+        emailService.createDocumentsRequest(applicationId);
     }
 
     private ScoringDataDTO fillScoringData(FinishRegistrationRequestDTO finishRegistrationRequestDTO, Application application, Client client) {
@@ -156,6 +180,23 @@ public class DealServiceImpl implements DealService {
                 .isInsuranceEnabled(application.getAppliedOffer().getIsInsuranceEnabled())
                 .isSalaryClient(application.getAppliedOffer().getIsSalaryClient())
                 .build();
+    }
+
+    private void denyApplication(Application application) {
+
+        updateApplicationStatus(application, ApplicationStatus.CC_DENIED, ChangeType.AUTOMATIC);
+
+        applicationRepository.save(application);
+        log.info("save application in db {}", application);
+
+        EmailMessage message = EmailMessage.builder()
+                .address(application.getClient().getEmail())
+                .applicationId(application.getId())
+                .theme(Theme.APPLICATION_DENIED)
+                .build();
+
+        log.info("denyApplication - start sending message to dossier = {}", message);
+        senderMessage.sendMessage(message);
     }
 
     private void updateApplicationStatus(Application application, ApplicationStatus newStatus, ChangeType newChangeType) {
