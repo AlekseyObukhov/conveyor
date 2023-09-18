@@ -11,24 +11,21 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/gateway")
 @Tag(name = "Deal")
 @RequiredArgsConstructor
 public class DealController {
 
     private final DealService dealService;
-    @PutMapping("/calculate/{applicationId}")
+    @PostMapping("/application/registration/{applicationId}")
     @Operation(summary = "Credit calculation")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -40,7 +37,7 @@ public class DealController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/document/{applicationId}/send")
+    @PostMapping("/document/{applicationId}")
     @Operation(summary = "Send documents request")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
@@ -64,7 +61,7 @@ public class DealController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/document/{applicationId}/code")
+    @PostMapping("/document/{applicationId}/sign/code")
     @Operation(summary = "Send Simple Electric Sign code")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),

@@ -12,15 +12,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/gateway")
 @Tag(name = "Application")
 @RequiredArgsConstructor
 public class ApplicationController {
@@ -38,7 +35,7 @@ public class ApplicationController {
         return ResponseEntity.ok(applicationService.getOffers(loanApplicationRequestDTO));
     }
 
-    @PutMapping("/offer")
+    @PostMapping("/application/apply")
     @Operation(summary = "Select and save an offer")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Offer successfully applied and saved"),
