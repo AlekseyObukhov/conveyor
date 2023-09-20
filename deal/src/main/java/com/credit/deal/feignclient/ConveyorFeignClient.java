@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(url = "http://localhost:8080/conveyor", name = "conveyor-client")
+@FeignClient(url = "http://conveyor:8080/conveyor", name = "conveyor-client")
 public interface ConveyorFeignClient {
     @PostMapping("/offers")
     ResponseEntity<List<LoanOfferDTO>> generateOffers(@RequestBody LoanApplicationRequestDTO request);

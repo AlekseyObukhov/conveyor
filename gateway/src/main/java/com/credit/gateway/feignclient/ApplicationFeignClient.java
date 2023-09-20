@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(url = "http://localhost:8082/application", name = "application-client")
+@FeignClient(url = "http://application:8082/application", name = "application-client")
 public interface ApplicationFeignClient {
     @PostMapping
     ResponseEntity<List<LoanOfferDTO>> getOffers(@RequestBody LoanApplicationRequestDTO request);

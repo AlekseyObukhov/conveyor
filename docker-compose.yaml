@@ -1,0 +1,68 @@
+version: '3.9'
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+    expose:
+      - 2181
+
+  kafka:
+    image: wurstmeister/kafka
+    expose:
+      - 9092
+    ports:
+      - 9092:9092
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "finish-registration:1:1,create-documents:1:1,send-documents:1:1,send-ses:1:1,credit-issued:1:1,application-denied:1:1"
+
+  application:
+    container_name: application
+    image: application
+    ports:
+      - 8082:8082
+
+  conveyor:
+    container_name: conveyor
+    image: conveyor
+    ports:
+      - 8080:8080
+
+  dossier:
+    container_name: dossier
+    image: dossier
+    ports:
+      - 8083:8083
+    depends_on:
+      - kafka
+
+  gateway:
+    container_name: gateway
+    image: gateway
+    ports:
+      - 8090:8090
+
+  PostgreSQL:
+    image: postgres:15
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=postgres
+
+  deal:
+    container_name: deal
+    image: deal
+    ports:
+      - 8081:8081
+    depends_on:
+      - PostgreSQL
+      - kafka
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://PostgreSQL:5432/postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=123
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update

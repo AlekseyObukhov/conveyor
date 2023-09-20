@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(url = "http://localhost:8081/deal", name = "deal-client")
+@FeignClient(url = "http://deal:8081/deal", name = "deal-client")
 public interface DealFeignClient {
 
     @PutMapping("/calculate/{applicationId}")
