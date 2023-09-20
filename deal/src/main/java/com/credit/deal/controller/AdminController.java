@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/deal/admin/application")
 @RequiredArgsConstructor
@@ -19,4 +21,10 @@ public class AdminController {
     public Application getApplicationById(@PathVariable Long applicationId) {
         return adminService.getApplicationById(applicationId);
     }
+
+    @GetMapping()
+    public List<Application> getApplications() {
+        return adminService.getApplications();
+    }
+
 }
