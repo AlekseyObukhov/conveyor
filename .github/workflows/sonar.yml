@@ -23,35 +23,35 @@ jobs:
 
     - name: Analyze Application with SonarCloud
       working-directory: ./application
-      run: mvn -B verify sonar:sonar -Dsonar.projectKey=conveyor -Dsonar.organization=AlekseyObukhov -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+      run: mvn -B verify sonar:sonar -Dsonar.projectKey=AlekseyObukhov_conveyor -Dsonar.organization=AlekseyObukhov -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     - name: Analyze Conveyor with SonarCloud
       working-directory: ./conveyor
-      run: mvn -B verify sonar:sonar -Dsonar.projectKey=conveyor -Dsonar.organization=AlekseyObukhov -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+      run: mvn -B verify sonar:sonar -Dsonar.projectKey=AlekseyObukhov_conveyor -Dsonar.organization=AlekseyObukhov -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     - name: Analyze Deal with SonarCloud
       working-directory: ./deal
-      run: mvn -B verify sonar:sonar -Dsonar.projectKey=conveyor -Dsonar.organization=AlekseyObukhov -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+      run: mvn -B verify sonar:sonar -Dsonar.projectKey=AlekseyObukhov_conveyor -Dsonar.organization=AlekseyObukhov -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     - name: Analyze Dossier with SonarCloud
       working-directory: ./dossier
-      run: mvn -B verify sonar:sonar -Dsonar.projectKey=conveyor -Dsonar.organization=AlekseyObukhov -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+      run: mvn -B verify sonar:sonar -Dsonar.projectKey=AlekseyObukhov_conveyor -Dsonar.organization=AlekseyObukhov -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
     - name: Analyze Gateway with SonarCloud
       working-directory: ./gateway
-      run: mvn -B verify sonar:sonar -Dsonar.projectKey=conveyor -Dsonar.organization=AlekseyObukhov -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
+      run: mvn -B verify sonar:sonar -Dsonar.projectKey=AlekseyObukhov_conveyor -Dsonar.organization=AlekseyObukhov -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
