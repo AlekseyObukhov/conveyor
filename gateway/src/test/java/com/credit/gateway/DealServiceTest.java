@@ -31,7 +31,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class DealServiceTest {
+class DealServiceTest {
 
     @Mock
     private DealFeignClient dealFeignClient;
@@ -97,7 +97,7 @@ public class DealServiceTest {
     }
 
     @Test
-    public void getApplicationById() {
+    void getApplicationById() {
         Long actualId = 1L;
         Application expectedApp = Application.builder()
                 .id(1L)
@@ -118,7 +118,7 @@ public class DealServiceTest {
     }
 
     @Test
-    public void getAllApplication() {
+    void getAllApplication() {
         Application expectedApp1 = Application.builder()
                 .id(1L)
                 .sesCode(1234)

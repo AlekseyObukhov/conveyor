@@ -11,8 +11,8 @@ spring:
     port: 465
     username: ${EMAIL_SENDER}
     password: ${EMAIL_PASSWORD}
-    protocol: smtps
-    properties.mail.smtps:
+    protocol: smtp
+    properties.mail.smtp:
       auth: true
       ssl.enable: true
 

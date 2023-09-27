@@ -24,7 +24,7 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 
 @WebMvcTest(ApplicationController.class)
-public class ApplicationControllerTest {
+class ApplicationControllerTest {
 
     @MockBean
     private ApplicationServiceImpl applicationService;
@@ -32,7 +32,7 @@ public class ApplicationControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Test
-    public void getOffersTest() throws Exception {
+    void getOffersTest() throws Exception {
         LoanApplicationRequestDTO loanApplicationRequestDTO = LoanApplicationRequestDTO.builder()
                 .amount(BigDecimal.valueOf(400000))
                 .term(18).birthdate(LocalDate.parse("1994-11-12"))

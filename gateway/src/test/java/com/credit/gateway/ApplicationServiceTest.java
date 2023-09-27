@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
-public class ApplicationServiceTest {
+class ApplicationServiceTest {
 
     @Mock
     private ApplicationFeignClient applicationFeignClient;
@@ -39,7 +39,7 @@ public class ApplicationServiceTest {
     private ArgumentCaptor<LoanOfferDTO> loanOfferDTOCaptor;
 
     @Test
-    public void getLoanOffer() {
+    void getLoanOffer() {
         LoanApplicationRequestDTO loanApplicationRequestDTO = LoanApplicationRequestDTO.builder()
                 .amount(BigDecimal.valueOf(400000))
                 .firstName("Ivan")
@@ -107,7 +107,7 @@ public class ApplicationServiceTest {
     }
 
     @Test
-    public void applyOffer() {
+    void applyOffer() {
         LoanOfferDTO loanOfferDTO = LoanOfferDTO.builder()
                 .applicationId(1L)
                 .requestedAmount(BigDecimal.valueOf(100000))

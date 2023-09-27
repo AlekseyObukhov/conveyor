@@ -10,7 +10,7 @@ services:
     expose:
       - 9092
     ports:
-      - 9092:9092
+      - "9092:9092"
     depends_on:
       - zookeeper
     environment:
@@ -21,48 +21,68 @@ services:
   application:
     container_name: application
     image: application
+    build:
+      context: ./application
+      dockerfile: Dockerfile
     ports:
-      - 8082:8082
+      - "8082:8082"
 
   conveyor:
     container_name: conveyor
     image: conveyor
+    build:
+      context: ./conveyor
+      dockerfile: Dockerfile
     ports:
-      - 8080:8080
+      - "8080:8080"
 
   dossier:
     container_name: dossier
     image: dossier
+    build:
+      context: ./dossier
+      dockerfile: Dockerfile
     ports:
-      - 8083:8083
-    depends_on:
-      - kafka
-
+      - "8083:8083"
+    environment:
+      EMAIL_SENDER: email
+      EMAIL_PASSWORD: password
   gateway:
     container_name: gateway
     image: gateway
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
     ports:
-      - 8090:8090
+      - "8090:8090"
 
   PostgreSQL:
     image: postgres:15
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=123
       - POSTGRES_DB=postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   deal:
     container_name: deal
     image: deal
+    build:
+      context: ./deal
+      dockerfile: Dockerfile
     ports:
-      - 8081:8081
+      - "8081:8081"
     depends_on:
-      - PostgreSQL
-      - kafka
+      PostgreSQL:
+        condition: service_healthy
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://PostgreSQL:5432/postgres
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=123
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
