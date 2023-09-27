@@ -4,15 +4,15 @@ spring:
       matching-strategy: ant_path_matcher
   kafka:
     consumer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: kafka:9092
 
   mail:
     host: smtp.yandex.com
     port: 465
     username: ${EMAIL_SENDER}
     password: ${EMAIL_PASSWORD}
-    protocol: smtps
-    properties.mail.smtps:
+    protocol: smtp
+    properties.mail.smtp:
       auth: true
       ssl.enable: true
 

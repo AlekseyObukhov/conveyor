@@ -33,7 +33,7 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 
 @WebMvcTest(ConveyorController.class)
-public class ConveyorControllerTests {
+class ConveyorControllerTests {
 
     @MockBean
     private ConveyorServiceImpl conveyorService;
@@ -42,12 +42,12 @@ public class ConveyorControllerTests {
     private MockMvc mockMvc;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         ReflectionTestUtils.setField(conveyorService, "baseRate", "8");
     }
 
     @Test
-    public void getOffersTest() throws Exception {
+    void getOffersTest() throws Exception {
         LoanApplicationRequestDTO requestDTO = LoanApplicationRequestDTO.builder()
                 .amount(BigDecimal.valueOf(400000))
                 .term(18).birthdate(LocalDate.parse("1994-11-12"))
@@ -77,7 +77,7 @@ public class ConveyorControllerTests {
     }
 
     @Test
-    public void calculateCreditTest() throws Exception {
+    void calculateCreditTest() throws Exception {
         EmploymentDTO employmentDTO = EmploymentDTO.builder().employmentStatus(EmploymentStatus.BUSINESS_OWNER)
                 .employerINN("inn")
                 .salary(BigDecimal.valueOf(85000))

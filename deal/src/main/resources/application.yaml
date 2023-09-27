@@ -16,5 +16,9 @@ spring:
       pathmatch:
         matching-strategy: ant_path_matcher
 
+    kafka:
+      producer:
+        bootstrap-servers: kafka:9092
+
 server:
   port: 8081
